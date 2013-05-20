@@ -509,9 +509,9 @@ int _tmain(int argc, _TCHAR* argv[])
 			//tagIoData* io = DecodeHex(test);
 			tagIoData* io = new tagIoData();
 			DWORD dwFileSize = 0;
-			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("d:\\0000000\\memory.dat",&dwFileSize);
+			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("..\\memory.dat",&dwFileSize);
 			CAirLogEx filter;
-			CHAR* pnew = filter.CharFilter(ptrFile, dwFileSize, 0xC3, &dwFileSize);
+			CHAR* pnew = ptrFile;//filter.CharFilter(ptrFile, dwFileSize, 0xC3, &dwFileSize);
 			io->buf = (unsigned char*)pnew;
 			io->buflen = dwFileSize;
 			io->pos = 0;
