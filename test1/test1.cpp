@@ -506,15 +506,15 @@ int _tmain(int argc, _TCHAR* argv[])
 			AMF3::context ctx;
 			AMF3::init_context(&ctx,read_data,write_data);
 
-			//tagIoData* io = DecodeHex(test);
-			tagIoData* io = new tagIoData();
-			DWORD dwFileSize = 0;
-			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("..\\memory.dat",&dwFileSize);
-			CAirLogEx filter;
-			CHAR* pnew = ptrFile;//filter.CharFilter(ptrFile, dwFileSize, 0xC3, &dwFileSize);
-			io->buf = (unsigned char*)pnew;
-			io->buflen = dwFileSize;
-			io->pos = 0;
+			tagIoData* io = DecodeHex(test);
+// 			tagIoData* io = new tagIoData();
+// 			DWORD dwFileSize = 0;
+// 			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("D:\\amf3.txt",&dwFileSize);
+// 			CAirLogEx filter;
+// 			CHAR* pnew = ptrFile;//filter.CharFilter(ptrFile, dwFileSize, 0xC3, &dwFileSize);
+// 			io->buf = (unsigned char*)pnew;
+// 			io->buflen = dwFileSize;
+// 			io->pos = 0;
 
 			AMF3::amf_object_handle obj = AMF3::decode(&ctx,io);
 
