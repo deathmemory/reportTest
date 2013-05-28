@@ -177,6 +177,7 @@ private:
 	int m_sblockSize;
 public:
 	/*static */CHAR* CharFilter(CHAR* lpSrc, DWORD dwSrcSize, const CHAR ch, DWORD* pdwOutSize = NULL);
+	char* connectRTMPPacks(CHAR* lpSrc, DWORD dwSrcSize, DWORD* pdwOutSize = NULL, const CHAR ch = 0xC3);
 	/*static */VOID FreeFilterStr(CHAR* lpstr);
 public:
 	BOOL PasteMemory(CHAR* lpMemory, DWORD dwsize);	// 粘贴内存解析战果 

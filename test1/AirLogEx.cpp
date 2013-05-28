@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "AirLogEx.h"
 
+#define AIRLOGREC(str)				OutputDebugStringA(str)
+
 CAirLogEx::CAirLogEx(void)
 {
 	ZeroMemory(&EndofGameStats, sizeof(ENDOFGAMESTATS));
@@ -36,6 +38,62 @@ CHAR* CAirLogEx::CharFilter(CHAR* lpSrc, DWORD dwSrcSize, const CHAR ch, DWORD* 
 		if (pdwOutSize)
 			*pdwOutSize = dwSrcSize - dwMatchCount;
 	} 
+	return lpszRes;
+}
+
+char* CAirLogEx::connectRTMPPacks(CHAR* lpSrc, DWORD dwSrcSize, DWORD* pdwOutSize /*= NULL*/, const CHAR ch /*= 0xC3*/)
+{
+	const int nMaxPackSize = 128;
+	char chFlag = 0x03;
+	char* lpszRes = NULL;
+	DWORD dwMatchCount = 0;
+	char* pTmp = NULL;
+	char* buffstart = NULL;
+	int nPackHeadSize = 12;
+	int nPackAllSize = 0;
+	if (*lpSrc != chFlag)
+	{
+		AIRLOGREC("not suport !");
+		return NULL;
+	}
+	else
+		buffstart = lpSrc + nPackHeadSize;	// rtmp pack head length
+	
+	pTmp = (char*)&nPackAllSize;	//rtmp pack body size
+	pTmp[0] = lpSrc[6];
+	pTmp[1] = lpSrc[5];
+	pTmp[2] = lpSrc[4];
+	pTmp[3] = 0;
+
+	if (nPackAllSize <= 0)
+	{
+		AIRLOGREC("get size err");
+		return NULL;
+	}
+
+	lpszRes = new char[nPackAllSize + 1];
+	ZeroMemory(lpszRes, nPackAllSize + 1);
+	int idx = 0, elementCount = 0;
+	for ( idx = 0, elementCount = dwSrcSize - nPackAllSize - nPackHeadSize; 
+		idx < elementCount ; 
+		++ idx
+		)
+	{
+		memcpy(lpszRes + idx*nMaxPackSize, buffstart, nMaxPackSize);
+		buffstart += nMaxPackSize;
+		if (*buffstart != ch)
+		{
+			AIRLOGREC("conver failed");
+			delete lpszRes;
+			return NULL;
+		}
+		else
+			buffstart += 1;
+	}
+	// left the end buff
+	memcpy(lpszRes + idx*nMaxPackSize, buffstart, dwSrcSize - (buffstart - lpSrc));
+	if ( pdwOutSize )
+		*pdwOutSize = nPackAllSize;
 	return lpszRes;
 }
 

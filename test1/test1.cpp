@@ -502,19 +502,20 @@ int _tmain(int argc, _TCHAR* argv[])
 		{
 			//{a:"123",b:[1,"2",0.3],c:"ºº×Ö"}
 			const char* test = "0a0b010363060de6b189e5ad970361060731323303620907010401060332053fd333333333333301";
-
+			CHAR* pnew = NULL;
 			AMF3::context ctx;
 			AMF3::init_context(&ctx,read_data,write_data);
 
-			tagIoData* io = DecodeHex(test);
-// 			tagIoData* io = new tagIoData();
-// 			DWORD dwFileSize = 0;
-// 			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("D:\\amf3.txt",&dwFileSize);
-// 			CAirLogEx filter;
-// 			CHAR* pnew = ptrFile;//filter.CharFilter(ptrFile, dwFileSize, 0xC3, &dwFileSize);
-// 			io->buf = (unsigned char*)pnew;
-// 			io->buflen = dwFileSize;
-// 			io->pos = 0;
+			//tagIoData* io = DecodeHex(test);
+ 			tagIoData* io = new tagIoData();
+ 			DWORD dwFileSize = 0;
+ 			CHAR* ptrFile = (CHAR*)FILEIO::ReadFileToBuff("D:\\amf3.txt",&dwFileSize);
+ 			CAirLogEx filter;
+			pnew = filter.connectRTMPPacks(ptrFile, dwFileSize, &dwFileSize);
+ 			//pnew = ptrFile;
+ 			io->buf = (unsigned char*)pnew+14;
+ 			io->buflen = dwFileSize-14;
+ 			io->pos = 0;
 
 			AMF3::amf_object_handle obj = AMF3::decode(&ctx,io);
 
